@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <title>forgot</title>
+    <style>
+        body{
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            /* background-image: url("https://e0.pxfuel.com/wallpapers/610/679/desktop-wallpaper-iphone-pink-red-violet-black-purple-magenta.jpg"); */
+            background-image: url("https://cdn.wallpapersafari.com/24/22/zCivhF.png");
+        }
+        h2{
+            color: aliceblue;
+            font-size: 80px;
+            font-weight: bolder;
+            animation: color-cycle 3s infinite linear;
+        }
+        article{
+            background-color:transparent;
+        box-shadow: 0px 0px 40px aliceblue;
+        border-radius: 30px;
+        padding: 70px 30px;
+        color: aliceblue;
+        }
+        .sec1{
+            font-size: 40px;
+            margin-bottom: 30px;
+        }
+        input{
+            padding: 13px 30px;
+            border-radius: 20px;
+            background: transparent;
+            border: 2px solid white;
+            color:white;
+        }
+        button{
+            padding: 8px 15px;
+            font-weight: bolder;
+        }
+        .b, .sec3, a{
+            font-size: 25px;
+            color:aliceblue;
+        }
+        input::placeholder{
+            color: white;
+        }
+        @keyframes color-cycle {
+        0% {
+            color:khaki; 
+        }
+        25% {
+            color: #f2f0f6;
+        }
+        50% {
+            color: #f19cbb; 
+        }
+        75% {
+            color: lightgreen; 
+        }
+        100% {
+            color: khaki; 
+        }
+        }
+    </style>
+</head>
+<body>
+        <main>
+            <h2>2048.org</h2>
+            <article>
+                <div class="sec1">Password Reset Request</div>
+                <hr>
+                <div class="sec2">
+                   <p class="b">Specify below your email address in order to initiate the password reset process.</p>
+                <input type="email" name="email" id="email" placeholder="Enter Email">
+                <br>
+                <br>
+                <button id="btn">Reqeust Password</button>
+                </div>           
+            </article>
+            <section class="sec3">
+                <h4>Contact: support@beetux.com</h4>
+                <h4>©2024 - 2048.org (operated by Beetux Software) - <a href="privacy.html">Privacy Policy</a></h4>
+            </section>
+        </main>
+    <script>
+        let btn = document.getElementById("btn");
+        btn.addEventListener("click", ()=>{
+            let inp = document.querySelector("#email").value;
+            if ((inp.length>11) && (inp.slice(-10)==="@gmail.com")){
+                alert("Password Reset Successful");
+                window.location.href="index.html";     
+            }
+            else{
+                alert("Enter a valid Email");
+            }
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>2048 Game</title>
+    <style>
+      body {
+        background-image: url("https://img.freepik.com/premium-vector/technology-hexagon-dark-futuristic-abstract-vector-background-with-pink-blue-colored-bright-flashes-hexagon-hexagonal-gaming-honeycomb-abstract-background_156943-959.jpg?semt=ais_hybrid");
+        background-size: cover;
+      }
+      .outbox {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 95vh;
+        margin: 0;
+        /* margin-top:10px; */
+      }
+      .grid-container {
+        background-color: black;
+        border: 3px solid white;
+        border-radius: 10px;
+        padding: 8px;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-gap: 6px;
+        height: 4fr;
+        width: 4fr;
+      }
+      .grid-cell {
+        width: 100px;
+        height: 100px;
+        background: linear-gradient(to bottom right, white, white);
+        opacity: 0.95;
+        border-radius: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 30px;
+        font-weight: bold;
+        color: black;
+      }
+      .grid-cell:hover {
+        transform: scale(1.05);
+        background: linear-gradient(to bottom right, silver, white, silver);
+      }
+      .top-section {
+        text-align: center;
+        display: flex;
+        justify-content: space-around;
+        line-height: 15px;
+        color: white;
+      }
+      .score,
+      .highscore {
+        display: inline-block;
+        font-weight: bold;
+        border: 1px solid white;
+        padding: 5px;
+      }
+      .highscore {
+        height: 15px;
+        width: 77px;
+        color: lightgreen;
+      }
+      .score {
+        height: 15px;
+        width: 40px;
+        color: red;
+      }
+      .newgame {
+        background-color: deepskyblue;
+        color: darkblue;
+        padding: 8px 70px;
+        float: right;
+        font-weight: bold;
+      }
+      .newgame:hover {
+        background-color: lightgreen;
+        color: black;
+        transform: scale(1.1);
+      }
+      .symbol {
+        color: #00a0ff;
+        font-size: 50px;
+        animation: color-cycle 3s infinite linear;
+
+      }
+      .instructions {
+        color: white;
+      }
+      .links {
+        position: absolute;
+        right: 0;
+        float: right;
+        margin-right: 50px;
+        margin-top: 5px;
+      }
+      .links > a {
+        text-decoration: none;
+        background-color: rgba(9, 49, 65, 0.1);
+        color: powderblue;
+        padding: 10px;
+        font-size: 15px;
+      }
+      a {
+        text-decoration: none;
+        color: deeppink;
+        margin-right: 20px;
+        font-size: 20px;
+        font-weight: bold;
+      }
+      .gameover {
+        text-align: center;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 100px;
+        display: none;
+      }
+      @keyframes color-cycle {
+        0% {
+            color:orange; 
+        }
+        25% {
+            color: #f2f0f6;
+        }
+        50% {
+            color: red; 
+        }
+        75% {
+            color: lightgreen; 
+        }
+        100% {
+            color: aqua; 
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <section class="links">
+      <a href="membership.html">[ Get a membership ]</a>
+      <a href="account.html">[ My account ]</a>
+    </section>
+    <br />
+    <main class="outbox">
+      <!-- header -->
+      <div class="top-section">
+        <div>
+          <h1>
+            <span class="symbol">2048</span>
+            <span style="color: #ff3fba">G</span>ame....
+          </h1>
+          <button class="newgame" style="float: left">Start Game</button>
+        </div>
+        <div>
+          <p>Score : <span class="score">0</span></p>
+          <p>High Score : <span class="highscore">0</span></p>
+        </div>
+      </div>
+      <!-- header -->
+
+      <!-- caption -->
+      <caption>
+        <p style="color: white; text-align: center" class="caption">
+          Welcome to the Game......
+        </p>
+      </caption>
+      <!-- caption -->
+
+      <!-- container -->
+      <div class="grid-container">
+        <div class="gameover"></div>
+        <!-- Grid cells -->
+      </div>
+      <!-- container -->
+
+      <p class="instructions">
+        <a href="instructions.html">How to play 2048 :</a> Use arrow keys to
+        move the tiles. When two tiles having the same number touch, they join
+        into one!
+      </p>
+      <br />
+    </main>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // Initilization part........
+        const gridContainer = document.querySelector(".grid-container");
+        let hs = document.querySelector(".highscore");
+        let s = document.querySelector(".score");
+        let btn = document.querySelector(".newgame");
+        let caption = document.querySelector(".caption");
+        let score = 0;
+        let highscore = 0;
+
+        const gridSize = 4;
+        let grid = [];
+
+        // Creating  the grid.............
+        function create_Grid() {
+          for (let i = 0; i < gridSize * gridSize; i++) {
+            const box = document.createElement("div"); // Creating a new Element "Div"
+            box.classList.add("grid-cell"); // class ="grid-cell" to the created Div
+            gridContainer.appendChild(box); // appending the child to the grid-cointainer
+            grid.push(box); // adding the child to the grid Array
+          }
+        }
+        // lets do all the operatioms on the grid..
+        // bcoz grid is a copy of grid-cointainer
+
+        //Generate new tile...........
+        function NewTile() {
+          // firstly we ae taking all the Div tags which have the innerText="" using .filer
+          // .filter creates a seperate array to store the values which satisfies the condition
+          let empty_box = grid.filter((box) => box.innerText === "");
+
+          // if there is atleast one empty grid present then true block orelse else block
+          // empty_box = list of Divs which have innerText = "" ---> empty
+          if (empty_box.length > 0) {
+            // creating a random_box to get 2 random positions
+            // Math.floor is used to convert the decimal to the nearest integer
+            // Math.random is used to generate a num between 0 to 1
+            // for Ex. Math.random generated a num 0.5 then 0.5 * 5 = 2.5
+            //         Math.floor(2.5) = 3
+            let random_Box =
+              empty_box[Math.floor(Math.random() * empty_box.length)]; // random_box = empty_box[3]
+            random_Box.innerText = 2; // changing the innerText from "" to 2
+          } else if (GameOver()) {
+            //if there is no grid with innerText=""  ----> then GAME OVER...!
+            alert("Game Over! No more moves available.");
+            return;
+          }
+
+          colors();
+        }
+
+        function GameOver() {
+          for (let i = 0; i < 4; i++) {
+            for (let j = 0; j < 4; j++) {
+              let current = grid[i * 4 + j].innerText;
+              if (current === "") return flase; // Empty cell means a move is possible
+              if (i < 3 && current === grid[(i + 1) * 4 + j].innerText)
+                return false; // Check down
+              if (j < 3 && current === grid[i * 4 + j + 1].innerText)
+                return false; // Check right
+            }
+          }
+          return true;
+        }
+
+        // Move tiles up
+        function moveUp() {
+          for (let col = 0; col < gridSize; col++) {
+            let column = [];
+            for (let row = 0; row < gridSize; row++) {
+              column.push(grid[row * gridSize + col]);
+            }
+            // we need to access the 1st column [0 4 8 12] and storing in column var and merge
+            // we need to access the 2nd column [1 5 9 13] and storing in column var and merge
+            // we need to access the 3rd column [2 6 10 14] and storing in column var and merge
+            // we need to access the 4th column [3 7 11 15] and storing in column var and merge
+            mergeTiles(column);
+          }
+          NewTile();
+        }
+
+        // Move tiles down
+        function moveDown() {
+          for (let col = 0; col < gridSize; col++) {
+            let column = [];
+            for (let row = gridSize - 1; row >= 0; row--) {
+              column.push(grid[row * gridSize + col]);
+            }
+            // we need to access the 1st column [12 8 4 0] and storing in column var and merge
+            // we need to access the 2nd column [13 9 5 1] and storing in column var and merge
+            // we need to access the 3rd column [14 10 6 2] and storing in column var and merge
+            // we need to access the 4th column [15 11 7 3] and storing in column var and merge
+            mergeTiles(column);
+          }
+          NewTile();
+        }
+
+        // Move tiles left
+        function moveLeft() {
+          for (let row = 0; row < gridSize; row++) {
+            let line = [];
+            for (let col = 0; col < gridSize; col++) {
+              line.push(grid[row * gridSize + col]);
+            }
+            // we need to access the 1st row [0 1 2 3] and storing in line var and merge
+            // we need to access the 2nd row [4 5 6 7] and storing in line var and merge
+            // we need to access the 3rd row [8 9 10 11] and storing in line var and merge
+            // we need to access the 4th row [12 13 14 15] and storing in line var and merge
+            mergeTiles(line);
+          }
+          NewTile();
+        }
+
+        // Move tiles right
+        function moveRight() {
+          for (let row = 0; row < gridSize; row++) {
+            let line = [];
+            for (let col = gridSize - 1; col >= 0; col--) {
+              line.push(grid[row * gridSize + col]);
+            }
+            // we need to access the 1st row [3 2 1 0] and storing in line var and merge
+            // we need to access the 2nd row [7 6 5 4] and storing in line var and merge
+            // we need to access the 3rd row [11 10 9 8] and storing in line var and merge
+            // we need to access the 4th row [15 14 13 12] and storing in line var and merge
+            mergeTiles(line);
+          }
+          NewTile();
+        }
+
+        // Merge tiles
+        function mergeTiles(tiles) {
+          // getting the innerText of all the tiles and storing as integers into the var values
+          let values = tiles.map((tile) => parseInt(tile.innerText) || 0);
+
+          // removing the zeroes from the var values using the .filter method
+          // .filter checks the codition and if it is true then it placed or else its removed from the list
+          // .filter is the short form of if else condition
+          values = values.filter((value) => value !== 0);
+
+          for (let i = 0; i < values.length - 1; i++) {
+            if (values[i] === values[i + 1]) {
+              values[i] *= 2; // adding the two tiles when both the tiles have same values and storing in first value
+
+              //score part
+              score += values[i];
+              s.innerText = score;
+              if (score > highscore) {
+                highscore = score; // changing the highscore if the score is increased than highscore
+                hs.innerText = highscore;
+              }
+
+              // if any of the values include the number 2048 then alert as YOU WON..!
+              if (values.includes(2048)) {
+                alert("YOU WON...");
+              }
+
+              // Dynamic Effect        // but not working properly :(
+              tiles[i].style.transition = "background-color 0.5s ease-in-out";
+
+              values[i + 1] = 0; // after adding two values the second value should be 0 ; because its merged with first value
+            }
+          }
+
+          // removing the zeroes from the var values using the .filter method
+          values = values.filter((value) => value !== 0);
+
+          // adding the zeroes in the remaining grid-cells after merging is completed
+          while (values.length < gridSize) {
+            values.push(0);
+          }
+
+          for (let i = 0; i < tiles.length; i++) {
+            // tiles[i].innerText = values[i] === 0 ? "" : values[i];   // using Nullish operator
+
+            // add the sorted values back to the innerText of the tiles
+            // if the value is 0 then empty the tile or else value in the innerText of the tile
+            if (values[i] === 0) {
+              tiles[i].innerText = "";
+            } else {
+              tiles[i].innerText = values[i];
+            }
+          }
+        }
+
+        function colors() {
+          for (let i = 0; i < grid.length; i++) {
+            // checking the innerText of all the grid cells
+            // Based on the innerText Value we are changing BG Color
+            if (grid[i].innerText == 0) {
+              grid[i].style.background =
+                "linear-gradient(to bottom right,silver,white,silver)";
+            } else if (grid[i].innerText == 2) {
+              grid[i].style.background =
+                "linear-gradient(to bottom right, crimson, white,crimson)";
+            } else if (grid[i].innerText == 4) {
+              grid[i].style.background =
+                "linear-gradient(to bottom right,seagreen ,white,seagreen)";
+            } else if (grid[i].innerText == 8) {
+              grid[i].style.background =
+                "linear-gradient(to bottom right, magenta,white,magenta)";
+            } else if (grid[i].innerText == 16) {
+              grid[i].style.background =
+                "linear-gradient(to bottom right, aqua,white,aqua)";
+            } else if (grid[i].innerText == 32) {
+              grid[i].style.background =
+                "linear-gradient(to bottom right,royalblue,white,royalblue)";
+            } else if (grid[i].innerText == 64) {
+              grid[i].style.background =
+                "linear-gradient(to bottom right,purple,white,purple)";
+            } else if (grid[i].innerText == 128) {
+              grid[i].style.background =
+                "linear-gradient(to bottom  right, green,white,green)";
+            } else if (grid[i].innerText == 256) {
+              grid[i].style.background =
+                "linear-gradient(to bottom  right, olive,white,olive)";
+            } else if (grid[i].innerText == 512) {
+              grid[i].style.background =
+                "linear-gradient(to bottom  right, coral,white,coral)";
+            } else if (grid[i].innerText == 1024) {
+              grid[i].style.background =
+                "linear-gradient(to bottom  right, gold ,white,gold)";
+            } else if (grid[i].innerText == 2048) {
+              grid[i].style.background =
+                "linear-gradient(to bottom  right,red,magenta,lightgreen,aqua,magenta,blue)";
+            }
+          }
+        }
+
+        // To Start/Reset the Game
+        btn.addEventListener("click", () => {
+          // Asking the name of player to show on the game....
+          // changing the caption based of the name
+
+          if (btn.innerText == "Start Game") {
+            let name = prompt("Enter Name to start : ").toUpperCase();
+            alert(`Welcome to the Game ${name}...`);
+            caption.innerText = `Let's try this ${name}....`;
+          }
+          score = 0;
+          s.innerText = score; // changing the innerText of score as 0 to reset the score...
+
+          // Changing the innertext of the grid to empty
+          for (let i = 0; i < grid.length; i++) {
+            grid[i].innerText = "";
+          }
+
+          // Handle key presses......
+          document.addEventListener("keydown", (press) => {
+            if (press.key === "ArrowUp") moveUp();
+            if (press.key === "ArrowDown") moveDown();
+            if (press.key === "ArrowLeft") moveLeft();
+            if (press.key === "ArrowRight") moveRight();
+
+            // Changing the innerText of the Button
+            btn.innerText = "New Game";
+          });
+
+          //Pre Given values at starting of game.....
+          NewTile();
+          NewTile();
+        });
+
+        //Main Function call.......
+        create_Grid();
+      });
+    </script>
+  </body>
+</html>

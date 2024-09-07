@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            /* background-image: url("https://images.hdqwalls.com/download/blue-triangle-abstract-4k-bf-480x800.jpg");           */
+            background-image: url("https://cdn.wallpapersafari.com/24/22/zCivhF.png");
+            background-size: cover;
+        }
+        h2{
+            text-align: center;
+            color: aliceblue;
+            font-size: 90px;
+            animation: color-cycle 3s infinite linear;
+        }
+        main{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        article{
+        background-color:transparent;
+        box-shadow: 0px 0px 40px aliceblue;
+        border-radius: 30px;
+        padding: 70px 30px;
+        color: aliceblue;
+        width:600px;
+       }
+       .sec1{
+        text-align: center;
+        font-size: 30px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: greenyellow;
+        font-family: "Nerko One", system-ui;
+       }
+       .sec2 , .sec3{
+        font-size: 20px;
+        margin-top: 20px;
+        color:white;
+
+       }
+       input{
+            padding: 13px 30px;
+            border-radius: 20px;
+            background: transparent;
+            border: 2px solid white;
+        }
+        button{
+            padding: 8px 15px;
+            font-weight: bolder;
+        }
+        input::placeholder{
+            color: aliceblue;
+            font-weight: bolder;
+        }
+        .inputs{
+            text-align: center;
+        }
+        #inp{
+            margin-bottom: 20px;
+        }
+        button{
+            padding: 10px 20px;
+        }
+        .sec4{
+        margin-top: 20px;
+        color: aliceblue;
+        text-align: center;
+        font-size: 20px;
+        font-family: "Merienda", system-ui;
+
+       }
+       .sec4 a{
+        color: aliceblue;
+       }
+       @keyframes color-cycle {
+        0% {
+            color:khaki; 
+        }
+        25% {
+            color: #f2f0f6;
+        }
+        50% {
+            color: #f19cbb; 
+        }
+        75% {
+            color: lightgreen; 
+        }
+        100% {
+            color: khaki; 
+        }
+        }
+        @media (max-width: 780px) {
+            h2 {
+                font-size: 60px;
+                margin-bottom: 40px;
+            }
+            h1 {
+                font-size: 30px;
+            }
+            .inputs input {
+                font-size: 18px;
+            }
+            .choices {
+                font-size: 16px;
+            }
+            .b {
+                font-size: 18px;
+            }
+            .h4 {
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 490px) {
+            article{
+                width:330px;
+            }
+            .inputs input{
+                padding: 2px 0px;
+            }
+            input::placeholder{
+                padding: 10px;
+            }
+            .user i, .pass i{
+                right:2px;
+            }
+            #btn{
+                width:200px;
+            }
+        }
+        @media (max-width:390px) {
+            article{
+                width:300px;
+            }
+            .inputs input{
+                padding: 2px 0px;
+            }
+            input::placeholder{
+                padding: 10px;
+            }
+            .user i, .pass i{
+                right:2px;
+            }
+            #btn{
+                width:300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <form action="index.html" method="get">
+        <h2>2048.org</h2>
+        <main>
+           <article>
+                <div class="sec1">Get a Membership</div>
+                <hr>
+                <div class="sec2">You will get the following benefits:
+                    <ul>
+                        <li>You won't see any ads while logged in.</li>
+                        <li>Ensure sustainability (help pay current costs and upcoming features).</li>
+                        <li>A golden star will appear next to your username.
+                        </li>
+                    </ul>
+                    <p style="color:yellow; font-weight: bolder;">A membership for 2048.org (operated by Beetux) is $4.99/month.</p>
+                    <div class="inputs">
+                        <label for="inp">Enter Your Email:</label>
+                        <input id="inp" type="email" placeholder=" Email" required >
+                        <!-- <br> -->
+                        <button  id="btn">Continue</button>
+                    </div>
+                </div>
+                <div class="sec3">
+                    <p>Your payment will be processed securely through PayPal. You can pay using a credit or debit card, or via a PayPal account.
+    
+                        Your membership will activate automatically within seconds after making the payment.</p>
+                    </div>
+            </article>
+            <div class="sec4">
+                <h4>Contact: support@beetux.com</h4>
+                <h4>©2024 - 2048.org (operated by Beetux Software) - <a href="privacy.html">Privacy Policy</a></h4>
+    
+            </div>
+        </main>
+    
+    </form>
+    <script>
+        let btn = document.getElementById("btn");
+        btn.addEventListener("click", ()=>{
+            let inp = document.querySelector("#inp").value;
+            if ((inp.length>11) && (inp.slice(-10)==="@gmail.com")){
+                alert("You got a Membership")        
+            }
+            else{
+                alert("Enter a valid Email");
+            }
+        })
+    </script>
+</body>
+</html>

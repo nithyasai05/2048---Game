@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <title>Document</title>
+    <style>
+       *{
+        padding: 0;
+        margin:0;
+       } 
+       body{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-size: cover;
+        /* background-image: url("https://e0.pxfuel.com/wallpapers/610/679/desktop-wallpaper-iphone-pink-red-violet-black-purple-magenta.jpg"); */
+        background-image: url("https://cdn.wallpapersafari.com/24/22/zCivhF.png");
+
+    }
+       article{
+        background-color:transparent;
+        box-shadow: 0px 0px 40px aliceblue;
+        border-radius: 30px;
+        padding: 70px 30px;
+        color: aliceblue;
+        text-align: center;
+       }
+       h2{
+        text-align: center;
+        color: aliceblue;
+        font-size: 80px;
+        margin-bottom: 50px;
+        animation: color-cycle 3s infinite linear;
+
+       }
+       h1{
+        text-align: center;
+        font-size: 35px;
+        color: aliceblue;
+       }
+       .inputs{
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+       }
+       .inputs input{
+        background:transparent;
+        height: 45px;
+        width: 300px;
+        border-radius: 30px;
+        border: none;
+        border: 2px solid aliceblue;
+        position: relative;
+        padding: 2px 30px;
+        color: aliceblue;
+        font-size: 20px;
+       }
+       .inputs input::placeholder{
+        color: aliceblue;
+        font-size: 20px;
+       }
+       .user , .pass{
+        position: relative;
+       }
+       .user i, .pass i{
+        position: absolute;
+        right: 100px;
+        top:50%;
+        transform: translate(-50%,-50%);
+       }
+       .choices{
+        display: flex;
+        justify-content: space-around;
+        color: aliceblue;
+        font-size: 19px;
+       }
+       a{
+        color:aliceblue;
+       }
+       button{
+        height: 40px;
+        width: 390px;
+        margin: 0px 10px;
+        border-radius: 20px;
+        font-weight: bold;
+       }
+       .b{
+        text-align: center;
+        font-size: 20px;
+       }
+       .h4{
+        margin-top: 20px;
+        color: aliceblue;
+        text-align: center;
+        font-size: 20px;
+        
+       }
+       @media (max-width: 780px) {
+            h2 {
+                font-size: 60px;
+                margin-bottom: 40px;
+            }
+            h1 {
+                font-size: 30px;
+            }
+            .inputs input {
+                font-size: 18px;
+            }
+            .choices {
+                font-size: 16px;
+            }
+            .b {
+                font-size: 18px;
+            }
+            .h4 {
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 490px) {
+            h2 {
+                font-size: 40px;
+                margin-bottom: 30px;
+            }
+            h1 {
+                font-size: 25px;
+            }
+            .inputs input {
+                font-size: 16px;
+                padding: 2px 20px;
+            }
+            .choices {
+                font-size: 14px;
+            }
+            .b {
+                font-size: 16px;
+            }
+            .h4 {
+                font-size: 14px;
+            }
+        }
+        @media (max-width:390px) {
+            article{
+                width:300px;
+            }
+            .inputs input{
+                padding: 2px 0px;
+            }
+            input::placeholder{
+                padding: 10px;
+            }
+            .user i, .pass i{
+                right:2px;
+            }
+            #btn{
+                width:300px;
+            }
+        }
+        @keyframes color-cycle {
+        0% {
+            color:khaki; 
+        }
+        25% {
+            color: #f2f0f6;
+        }
+        50% {
+            color: #f19cbb; 
+        }
+        75% {
+            color: lightgreen; 
+        }
+        100% {
+            color: khaki; 
+        }
+        }
+    </style>
+</head>
+<body>
+    <form action="index.html" method="get">
+
+            <h2>2048.org</h2>
+        <article>
+            <h1>Login</h1>
+            <div class="inputs">
+                <div class="user">
+                    <input type="text" id="username" placeholder="Username" required>
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <br>
+                <div class="pass">
+                    <input type="password"  id="password" placeholder="Password" required>
+                    <i class="fa-solid fa-key"></i>
+                </div>
+            </div>
+            <br>
+            <div class="choices">
+                <div class="remember">
+                    <input type="checkbox" id="remember">
+                    <label for="remember">Remember Me?</label>
+                </div>
+                <div class="forgot">
+                <a href="forgot.html">Forgot Password?</a>
+                </div>
+            </div>
+            <br>
+            <div class="btn">
+                <button id="btn">Login</button>
+            </div>
+            <br>
+            <p class="b">  Don't have an account? <a href="membership.html">Get a membership </a>to create one </p>
+        </article>
+        <h4 class="h4">Contact: support@beetux.com</h4>
+        <h4 class="h4">©2024 - 2048.org (operated by Beetux Software) - <a href="privacy.html">Privacy Policy</a></h4>
+    </form>
+    <script>
+     
+        document.addEventListener("DOMContentLoaded",()=>{
+
+let btn=document.querySelector("#btn")
+
+btn.addEventListener("click",()=>{
+    let username=document.getElementById("username").value;
+let password=document.getElementById("password").value;
+    if((username == "") ||(password =="")){
+        alert("Provide Username & Password")
+    }else{
+        alert("Sign In Successfull....!")
+    }
+})
+        })
+    </script>
+</body>
+</html>
