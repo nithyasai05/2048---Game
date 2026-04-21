@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+    />
+    <title>Account</title>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        overflow: hidden;
+        background-size: cover;
+        background-position: center;
+        background-image: url("https://cdn.wallpapersafari.com/24/22/zCivhF.png");
+        color: aliceblue;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      form {
+        width: min(94vw, 460px);
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: clamp(8px, 1.8vh, 14px);
+        padding: clamp(10px, 2vh, 18px) 0;
+      }
+
+      article {
+        width: 100%;
+        background-color: rgba(0, 0, 0, 0.28);
+        backdrop-filter: blur(4px);
+        box-shadow: 0 0 28px rgba(240, 248, 255, 0.65);
+        border-radius: 22px;
+        padding: clamp(14px, 2.6vh, 26px) clamp(14px, 3vw, 24px);
+        color: aliceblue;
+        text-align: center;
+      }
+
+      h2 {
+        text-align: center;
+        color: aliceblue;
+        font-size: clamp(26px, 5.8vw, 54px);
+        margin-bottom: clamp(2px, 0.8vh, 8px);
+        line-height: 1.05;
+        animation: color-cycle 3s infinite linear;
+      }
+
+      h1 {
+        text-align: center;
+        font-size: clamp(20px, 3vw, 30px);
+        color: aliceblue;
+      }
+
+      .inputs {
+        padding: clamp(8px, 1.6vh, 14px) 0;
+        display: flex;
+        flex-direction: column;
+        gap: clamp(8px, 1.4vh, 12px);
+      }
+
+      .inputs input {
+        background: transparent;
+        height: clamp(38px, 5.4vh, 45px);
+        width: 100%;
+        border-radius: 26px;
+        border: 2px solid aliceblue;
+        padding: 2px 42px 2px 16px;
+        color: aliceblue;
+        font-size: clamp(14px, 1.9vw, 18px);
+        outline: none;
+      }
+
+      .inputs input::placeholder {
+        color: rgba(240, 248, 255, 0.92);
+        font-size: inherit;
+      }
+
+      .user,
+      .pass {
+        position: relative;
+        width: 100%;
+      }
+
+      .user i,
+      .pass i {
+        position: absolute;
+        right: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: clamp(12px, 1.6vw, 16px);
+      }
+
+      .choices {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        color: aliceblue;
+        font-size: clamp(12px, 1.6vw, 15px);
+        margin-bottom: clamp(4px, 0.8vh, 8px);
+      }
+
+      a {
+        color: aliceblue;
+      }
+
+      button {
+        height: clamp(38px, 5.2vh, 42px);
+        width: 100%;
+        margin: 0;
+        border-radius: 20px;
+        font-weight: bold;
+        border: none;
+        font-size: clamp(14px, 1.8vw, 16px);
+      }
+
+      .b {
+        text-align: center;
+        font-size: clamp(12px, 1.7vw, 16px);
+        line-height: 1.35;
+      }
+
+      .h4 {
+        color: aliceblue;
+        text-align: center;
+        font-size: clamp(10px, 1.4vw, 13px);
+        line-height: 1.35;
+      }
+
+      @media (max-width: 520px) {
+        form {
+          width: min(95vw, 430px);
+          padding: 8px 0;
+          gap: 8px;
+        }
+
+        article {
+          border-radius: 18px;
+          padding: 12px;
+        }
+
+        .choices {
+          flex-wrap: wrap;
+          justify-content: space-between;
+        }
+      }
+
+      @media (max-height: 760px) {
+        form {
+          gap: 6px;
+          padding: 6px 0;
+        }
+
+        h2 {
+          margin-bottom: 0;
+        }
+
+        article {
+          padding: 12px;
+        }
+
+        .inputs {
+          gap: 8px;
+          padding: 8px 0;
+        }
+
+        .h4 {
+          font-size: clamp(9px, 1.2vw, 12px);
+        }
+      }
+
+      @media (max-height: 640px) {
+        form {
+          gap: 4px;
+        }
+        .h4 {
+          line-height: 1.2;
+        }
+      }
+
+      @keyframes color-cycle {
+        0% {
+          color: khaki;
+        }
+        25% {
+          color: #f2f0f6;
+        }
+        50% {
+          color: #f19cbb;
+        }
+        75% {
+          color: lightgreen;
+        }
+        100% {
+          color: khaki;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <form action="index.html" method="get">
+      <h2>2048.org</h2>
+      <article>
+        <h1>Login</h1>
+        <div class="inputs">
+          <div class="user">
+            <input type="text" id="username" placeholder="Username" required />
+            <i class="fa-solid fa-user"></i>
+          </div>
+          <div class="pass">
+            <input
+              type="password"
+              id="password"
+              placeholder="Password"
+              required
+            />
+            <i class="fa-solid fa-key"></i>
+          </div>
+        </div>
+        <div class="choices">
+          <div class="remember">
+            <input type="checkbox" id="remember" />
+            <label for="remember">Remember Me?</label>
+          </div>
+          <div class="forgot">
+            <a href="forgot.html">Forgot Password?</a>
+          </div>
+        </div>
+        <div class="btn">
+          <button id="btn">Login</button>
+        </div>
+        <p class="b">
+          Don't have an account?
+          <a href="membership.html">Get a membership </a>to create one
+        </p>
+      </article>
+      <h4 class="h4">Contact: support@beetux.com</h4>
+      <h4 class="h4">
+        ©2024 - 2048.org (operated by Beetux Software) -
+        <a href="privacy.html">Privacy Policy</a>
+      </h4>
+    </form>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        let btn = document.querySelector("#btn");
+
+        btn.addEventListener("click", () => {
+          let username = document.getElementById("username").value;
+          let password = document.getElementById("password").value;
+          if (username == "" || password == "") {
+            alert("Provide Username & Password");
+          } else {
+            alert("Sign In Successfull....!");
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

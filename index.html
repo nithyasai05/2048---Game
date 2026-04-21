@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>2048 Game</title>
+    <style>
+      :root {
+        --panel-bg: rgba(6, 10, 18, 0.62);
+        --muted: rgba(255, 255, 255, 0.92);
+        --accent: #ff3fba;
+        --glass-blur: 8px;
+      }
+
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden; /* prevent page scroll so arrow keys go to game */
+      }
+
+      body {
+        background-image: url("https://img.freepik.com/premium-vector/technology-hexagon-dark-futuristic-abstract-vector-background-with-pink-blue-colored-bright-flashes-hexagon-hexagonal-gaming-honeycomb-abstract-background_156943-959.jpg?semt=ais_hybrid");
+        background-size: cover;
+        background-position: center;
+        font-family:
+          Inter,
+          system-ui,
+          -apple-system,
+          "Segoe UI",
+          Roboto,
+          Arial;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        color: var(--muted);
+      }
+
+      .outbox {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        box-sizing: border-box;
+        padding: 10px 16px;
+        gap: 6px;
+      }
+
+      .top-section {
+        width: 100%;
+        max-width: 980px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+
+      .brand-card {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 16px;
+        border-radius: 12px;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.02),
+          rgba(255, 255, 255, 0.005)
+        );
+        backdrop-filter: blur(var(--glass-blur));
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(16px, 2.5vw, 26px);
+      }
+      .symbol {
+        color: var(--accent);
+        font-weight: 800;
+        margin-right: 6px;
+      }
+
+      .controls {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+
+      .scoreboard {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+      .score,
+      .highscore {
+        background: rgba(255, 255, 255, 0.04);
+        padding: 5px 10px;
+        border-radius: 10px;
+        min-width: 80px;
+        text-align: center;
+        font-weight: 700;
+        font-size: clamp(12px, 1.6vw, 15px);
+      }
+      .highscore {
+        color: #bff7c6;
+      }
+      .score {
+        color: #ffd1d1;
+      }
+
+      .newgame {
+        background: linear-gradient(90deg, #00b4ff, #6ee7b7);
+        border: none;
+        padding: 8px 12px;
+        border-radius: 10px;
+        font-weight: 800;
+        font-size: clamp(12px, 1.6vw, 15px);
+        cursor: pointer;
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.5);
+      }
+
+      .caption {
+        color: rgba(255, 255, 255, 0.9);
+        margin: 0;
+        text-align: center;
+        font-size: clamp(12px, 1.6vw, 15px);
+      }
+
+      .grid-container {
+        --game-size: min(520px, 90vw, calc(100vh - 210px));
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: repeat(4, 1fr);
+        gap: min(12px, 1.5vw);
+        width: var(--game-size);
+        height: var(--game-size);
+        padding: min(16px, 2vw);
+        box-sizing: border-box;
+        border-radius: 14px;
+        background: var(--panel-bg);
+        box-shadow:
+          0 24px 60px rgba(0, 0, 0, 0.6),
+          inset 0 1px 0 rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        flex-shrink: 0;
+      }
+
+      .grid-cell {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        font-size: clamp(14px, 3.8vw, 32px);
+        font-weight: 800;
+        color: #051220;
+        background: linear-gradient(180deg, #f6f7fb, #e7e9ef);
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.45);
+        transition:
+          transform 0.12s ease,
+          background 0.12s ease;
+      }
+
+      .grid-cell.empty {
+        background: linear-gradient(180deg, #2a2a2a, #1f1f1f);
+        color: rgba(255, 255, 255, 0.75);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+      }
+
+      .links {
+        position: absolute;
+        right: 18px;
+        top: 10px;
+        display: flex;
+        gap: 8px;
+        z-index: 10;
+      }
+      .links > a {
+        padding: 5px 8px;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.03);
+        color: #cfeefe;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: clamp(10px, 1.3vw, 14px);
+      }
+
+      .instructions {
+        color: rgba(255, 255, 255, 0.92);
+        text-align: center;
+        font-size: clamp(11px, 1.4vw, 14px);
+        margin: 0;
+      }
+      .instructions a {
+        font-size: inherit;
+      }
+
+      @media (max-height: 700px) {
+        .outbox {
+          padding: 6px 12px;
+          gap: 4px;
+        }
+        .grid-container {
+          --game-size: min(480px, 88vw, calc(100vh - 170px));
+        }
+        .top-section {
+          gap: 4px;
+        }
+        h1 {
+          font-size: clamp(14px, 2.2vw, 20px);
+        }
+      }
+
+      @media (max-width: 520px) {
+        .grid-container {
+          gap: 6px;
+          padding: 10px;
+          --game-size: min(92vw, calc(100vh - 190px));
+        }
+        .grid-cell {
+          border-radius: 8px;
+          font-size: clamp(14px, 6vw, 22px);
+        }
+        .top-section {
+          gap: 6px;
+          flex-direction: column;
+          align-items: center;
+        }
+        .links {
+          top: 6px;
+          right: 8px;
+        }
+      }
+
+      @media (max-width: 360px) {
+        .grid-container {
+          gap: 4px;
+          padding: 8px;
+          --game-size: min(94vw, calc(100vh - 160px));
+        }
+        .grid-cell {
+          border-radius: 6px;
+        }
+        .outbox {
+          padding: 4px 8px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <section class="links">
+      <a href="membership.html">[ Get a membership ]</a>
+      <a href="account.html">[ My account ]</a>
+    </section>
+    <main class="outbox">
+      <div class="top-section">
+        <div>
+          <h1>
+            <span class="symbol">2048</span>
+            <span style="color: #ff3fba">G</span>ame....
+          </h1>
+          <button class="newgame">Start Game</button>
+        </div>
+        <div>
+          <p style="margin: 2px 0">Score : <span class="score">0</span></p>
+          <p style="margin: 2px 0">
+            High Score : <span class="highscore">0</span>
+          </p>
+        </div>
+      </div>
+
+      <p class="caption">Welcome to the Game......</p>
+
+      <div class="grid-container">
+        <!-- Grid cells will be generated here -->
+      </div>
+
+      <p class="instructions">
+        <a href="instructions.html">How to play 2048 :</a> Use arrow keys or
+        swipe to move tiles. When two tiles with the same number touch, they
+        merge!
+      </p>
+    </main>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const gridContainer = document.querySelector(".grid-container");
+        let hs = document.querySelector(".highscore");
+        let s = document.querySelector(".score");
+        let btn = document.querySelector(".newgame");
+        let caption = document.querySelector(".caption");
+        let score = 0;
+        let highscore = 0;
+        const gridSize = 4;
+        let grid = [];
+
+        function create_Grid() {
+          for (let i = 0; i < gridSize * gridSize; i++) {
+            const box = document.createElement("div");
+            box.classList.add("grid-cell");
+            gridContainer.appendChild(box);
+            grid.push(box);
+          }
+        }
+
+        function NewTile() {
+          let empty_box = grid.filter((box) => box.innerText === "");
+          if (empty_box.length > 0) {
+            let random_Box =
+              empty_box[Math.floor(Math.random() * empty_box.length)];
+            random_Box.innerText = 2;
+          } else if (GameOver()) {
+            alert("Game Over! No more moves available.");
+            return;
+          }
+          colors();
+        }
+
+        function GameOver() {
+          for (let i = 0; i < 4; i++) {
+            for (let j = 0; j < 4; j++) {
+              let current = grid[i * 4 + j].innerText;
+              if (current === "") return false;
+              if (i < 3 && current === grid[(i + 1) * 4 + j].innerText)
+                return false;
+              if (j < 3 && current === grid[i * 4 + j + 1].innerText)
+                return false;
+            }
+          }
+          return true;
+        }
+
+        function moveUp() {
+          for (let col = 0; col < gridSize; col++) {
+            let column = [];
+            for (let row = 0; row < gridSize; row++) {
+              column.push(grid[row * gridSize + col]);
+            }
+            mergeTiles(column);
+          }
+          NewTile();
+        }
+
+        function moveDown() {
+          for (let col = 0; col < gridSize; col++) {
+            let column = [];
+            for (let row = gridSize - 1; row >= 0; row--) {
+              column.push(grid[row * gridSize + col]);
+            }
+            mergeTiles(column);
+          }
+          NewTile();
+        }
+
+        function moveLeft() {
+          for (let row = 0; row < gridSize; row++) {
+            let line = [];
+            for (let col = 0; col < gridSize; col++) {
+              line.push(grid[row * gridSize + col]);
+            }
+            mergeTiles(line);
+          }
+          NewTile();
+        }
+
+        function moveRight() {
+          for (let row = 0; row < gridSize; row++) {
+            let line = [];
+            for (let col = gridSize - 1; col >= 0; col--) {
+              line.push(grid[row * gridSize + col]);
+            }
+            mergeTiles(line);
+          }
+          NewTile();
+        }
+
+        function mergeTiles(tiles) {
+          let values = tiles.map((tile) => parseInt(tile.innerText) || 0);
+          values = values.filter((value) => value !== 0);
+
+          for (let i = 0; i < values.length - 1; i++) {
+            if (values[i] === values[i + 1]) {
+              values[i] *= 2;
+              score += values[i];
+              s.innerText = score;
+              if (score > highscore) {
+                highscore = score;
+                hs.innerText = highscore;
+              }
+              if (values.includes(2048)) {
+                alert("YOU WON...");
+              }
+              values[i + 1] = 0;
+            }
+          }
+
+          values = values.filter((value) => value !== 0);
+          while (values.length < gridSize) {
+            values.push(0);
+          }
+
+          for (let i = 0; i < tiles.length; i++) {
+            tiles[i].innerText = values[i] === 0 ? "" : values[i];
+          }
+        }
+
+        function colors() {
+          for (let i = 0; i < grid.length; i++) {
+            let val = grid[i].innerText;
+            if (val === "")
+              grid[i].style.background =
+                "linear-gradient(to bottom right,silver,white,silver)";
+            else if (val == 2)
+              grid[i].style.background =
+                "linear-gradient(to bottom right, crimson, white,crimson)";
+            else if (val == 4)
+              grid[i].style.background =
+                "linear-gradient(to bottom right,seagreen ,white,seagreen)";
+            else if (val == 8)
+              grid[i].style.background =
+                "linear-gradient(to bottom right, magenta,white,magenta)";
+            else if (val == 16)
+              grid[i].style.background =
+                "linear-gradient(to bottom right, aqua,white,aqua)";
+            else if (val == 32)
+              grid[i].style.background =
+                "linear-gradient(to bottom right,royalblue,white,royalblue)";
+            else if (val == 64)
+              grid[i].style.background =
+                "linear-gradient(to bottom right,purple,white,purple)";
+            else if (val == 128)
+              grid[i].style.background =
+                "linear-gradient(to bottom  right, green,white,green)";
+            else if (val == 256)
+              grid[i].style.background =
+                "linear-gradient(to bottom  right, olive,white,olive)";
+            else if (val == 512)
+              grid[i].style.background =
+                "linear-gradient(to bottom  right, coral,white,coral)";
+            else if (val == 1024)
+              grid[i].style.background =
+                "linear-gradient(to bottom  right, gold ,white,gold)";
+            else if (val == 2048)
+              grid[i].style.background =
+                "linear-gradient(to bottom right,red,magenta,lightgreen,aqua,magenta,blue)";
+          }
+        }
+
+        btn.addEventListener("click", () => {
+          if (btn.innerText == "Start Game") {
+            let name = prompt("Enter Name to start : ").toUpperCase();
+            alert(`Welcome to the Game ${name}...`);
+            caption.innerText = `Let's try this ${name}....`;
+          }
+
+          score = 0;
+          s.innerText = score;
+          for (let i = 0; i < grid.length; i++) grid[i].innerText = "";
+
+          document.addEventListener("keydown", (press) => {
+            if (press.key === "ArrowUp") moveUp();
+            if (press.key === "ArrowDown") moveDown();
+            if (press.key === "ArrowLeft") moveLeft();
+            if (press.key === "ArrowRight") moveRight();
+            btn.innerText = "New Game";
+          });
+
+          NewTile();
+          NewTile();
+        });
+
+        // Touch Gesture Support for Mobile
+        let touchStartX = 0;
+        let touchStartY = 0;
+
+        document.addEventListener(
+          "touchstart",
+          (e) => {
+            const touch = e.touches[0];
+            touchStartX = touch.clientX;
+            touchStartY = touch.clientY;
+          },
+          false,
+        );
+
+        document.addEventListener(
+          "touchend",
+          (e) => {
+            const touch = e.changedTouches[0];
+            const dx = touch.clientX - touchStartX;
+            const dy = touch.clientY - touchStartY;
+            const absDx = Math.abs(dx);
+            const absDy = Math.abs(dy);
+
+            if (Math.max(absDx, absDy) > 30) {
+              if (absDx > absDy) {
+                if (dx > 0) moveRight();
+                else moveLeft();
+              } else {
+                if (dy > 0) moveDown();
+                else moveUp();
+              }
+            }
+          },
+          false,
+        );
+
+        create_Grid();
+      });
+    </script>
+  </body>
+</html>
